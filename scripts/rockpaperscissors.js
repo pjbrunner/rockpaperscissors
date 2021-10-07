@@ -3,7 +3,7 @@
 // 3. Send computer and player move to playRound()
 // 4. Output result of the round
 // 5. Repeat 1-4 5 times keeping track of the win-loss record
-// 6. After five rounds have been played determine and output the overall winnder
+// 6. After five rounds have been played determine and output the overall winner
 
 const debug = false;
 
@@ -32,8 +32,8 @@ function playRound(playerSelection, computerSelection) {
         console.log('\n');
         return 0;
     } else if((playerSelection === 'rock' && computerSelection === 'paper') || 
-               (playerSelection === 'paper' && computerSelection === 'scissors') ||
-               (playerSelection === 'scissors' && computerSelection === 'rock')) {
+              (playerSelection === 'paper' && computerSelection === 'scissors') ||
+              (playerSelection === 'scissors' && computerSelection === 'rock')) {
         console.log('Computer Wins');
         console.log('\n');
         return -1;
@@ -84,5 +84,6 @@ function getUserInput() {
 }
 
 function validate(userInput) {
-    return userInput === 'rock' || userInput === 'paper' || userInput === 'scissors' || false;
+    return userInput === 'rock' || userInput === 'paper' ||
+            userInput === 'scissors' || false;
 }
