@@ -25,65 +25,82 @@ function randomIntWithInterval(min, max) {
 }
 
 function playRound(playerSelection, computerSelection) {
-    console.log(`Player selection ${playerSelection}`)
-    console.log(`Computer selection ${computerSelection}`)
+    if(roundsPlayed === 0) {
+        overallWinnerPara.textContent = '';
+    }
+    playerSelectionPara.textContent = `Player selects ${playerSelection}`;
+    compSelectionPara.textContent = `Computer selects ${computerSelection}`;
+    roundsPlayed += 1;
+    roundsPlayedPara.textContent = `Rounds played: ${roundsPlayed}`;
     if(playerSelection === computerSelection) {
-        console.log('Tie');
-        console.log('\n');
+        roundResultPara.textContent = 'Tie';
         return 0;
     } else if((playerSelection === 'rock' && computerSelection === 'paper') || 
               (playerSelection === 'paper' && computerSelection === 'scissors') ||
               (playerSelection === 'scissors' && computerSelection === 'rock')) {
-        console.log('Computer Wins');
-        console.log('\n');
+        roundResultPara.textContent = 'Computer wins round';
         return -1;
     } else {
-        console.log('Player Wins');
-        console.log('\n');
+        roundResultPara.textContent = 'Player wins round';
         return 1
     }
 }
 
-function game(rounds=5) {
-    let result = '';
-    let playerWins = 0;
-    let computerWins = 0;
-    let ties = 0;
-    for(let i = 0; i < rounds; i++) {
-        result = playRound(getUserInput(), computerPlay());
-        if(result === 1) {
-            playerWins++;
-        } else if(result === -1) {
-            computerWins++;
-        } else if(result === 0) {
-            ties++;
-            continue;
-        } else {
-            throw `Invalid number ${result} received by playRound(). Expected 1, 0, -1.`
-        }
-    }
-
-    let score = `Player: ${playerWins}\nComputer: ${computerWins}\nTies: ${ties}`
-    if(playerWins > computerWins) {
-        console.log(`Player Wins!\n${score}`)
-    } else if(computerWins > playerWins) {
-        console.log(`Computer Wins!\n${score}`)
+function game(result) {
+    if(result === 1) {
+        playerWins++;
+    } else if(result === -1) {
+        computerWins++;
+    } else if(result === 0) {
+        ties++;
     } else {
-        console.log(`Tie Game\n${score}`)
+        throw `Invalid number ${result} received by playRound(). Expected 1, 0, -1.`
+    }
+
+    if(roundsPlayed >= maxRounds) {
+        let score = `Player: ${playerWins}\nComputer: ${computerWins}\nTies: ${ties}`
+        if(playerWins > computerWins) {
+            overallWinnerPara.textContent = `Player Wins!\n${score}`;
+        } else if(computerWins > playerWins) {
+            overallWinnerPara.textContent = `Computer Wins!\n${score}`;
+        } else {
+            overallWinnerPara.textContent = `Tie Game\n${score}`;
+        }
+        roundsPlayed = 0;
+        playerWins = 0;
+        computerWins = 0;
+        ties = 0;
     }
 }
 
-function getUserInput() {
-    let validated = false;
-    let userChoice = '';
-    while(!validated) {
-        userChoice = prompt('Enter rock, paper, or scissors').toLowerCase();
-        validated = validate(userChoice);
-    }
-    return userChoice;
-}
+const rockButton = document.getElementById('rock');
+const paperButton = document.getElementById('paper');
+const scissorsButton = document.getElementById('scissors');
+const playerSelectionPara = document.createElement('p');
+const compSelectionPara = document.createElement('p');
+const roundResultPara = document.createElement('p');
+const roundsPlayedPara = document.createElement('p');
+const overallWinnerPara = document.createElement('p');
+const results = document.getElementById('results');
 
-function validate(userInput) {
-    return userInput === 'rock' || userInput === 'paper' ||
-            userInput === 'scissors' || false;
-}
+let maxRounds = 5;
+let roundsPlayed = 0;
+let playerWins = 0;
+let computerWins = 0;
+let ties = 0;
+
+results.appendChild(playerSelectionPara);
+results.appendChild(compSelectionPara);
+results.appendChild(roundResultPara);
+results.appendChild(roundsPlayedPara);
+results.appendChild(overallWinnerPara);
+
+rockButton.addEventListener('click', () => {
+    game(playRound(rockButton.id, computerPlay()))
+});
+paperButton.addEventListener('click', () => {
+    game(playRound(paperButton.id, computerPlay()))
+});
+scissorsButton.addEventListener('click', () => {
+    game(playRound(scissorsButton.id, computerPlay()))
+});
